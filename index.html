@@ -16,7 +16,7 @@
       --muted: #666666;
       --accent2: #888888;
       --border: rgba(255,255,255,0.08);
-      --glow-color: rgba(255,255,255,0.18);
+      --glow-color: rgba(255,255,255,0.55);
     }
 
     body {
@@ -74,16 +74,16 @@
       transition: opacity 0.3s ease;
       background: conic-gradient(
         from var(--glow-angle, 0deg) at var(--glow-x, 50%) var(--glow-y, 50%),
-        transparent 60deg,
-        var(--glow-color) 120deg,
-        transparent 180deg
+        transparent 40deg,
+        var(--glow-color) 100deg,
+        transparent 160deg
       );
       -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      padding: 1.5px;
+      padding: 2px;
     }
 
     .card {
