@@ -10,12 +10,10 @@
 
     :root {
       --bg: #0a0a0a;
-      --surface: #111111;
       --card: #1a1a1a;
-      --accent: #d4d4d4;
-      --accent2: #888888;
       --text: #f0f0f0;
       --muted: #666666;
+      --accent2: #888888;
       --border: rgba(255,255,255,0.08);
     }
 
@@ -30,17 +28,6 @@
       overflow-x: hidden;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 15% 30%, rgba(255,255,255,0.03) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 60% at 85% 75%, rgba(255,255,255,0.02) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
     .grain {
       position: fixed;
       inset: 0;
@@ -48,6 +35,70 @@
       pointer-events: none;
       z-index: 1;
       opacity: 0.6;
+    }
+
+    .ambience {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .ambience-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .ambience-orb-1 {
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 70%);
+      top: -80px;
+      left: -80px;
+      animation-delay: 0s;
+      animation-duration: 10s;
+    }
+
+    .ambience-orb-2 {
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%);
+      bottom: -60px;
+      right: -60px;
+      animation-delay: 3s;
+      animation-duration: 12s;
+    }
+
+    .ambience-orb-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 6s;
+      animation-duration: 9s;
+    }
+
+    @keyframes orbFloat {
+      0%   { opacity: 0; transform: scale(1) translate(0, 0); }
+      25%  { opacity: 1; }
+      50%  { opacity: 0.6; transform: scale(1.08) translate(10px, -12px); }
+      75%  { opacity: 1; }
+      100% { opacity: 0; transform: scale(1) translate(0, 0); }
+    }
+
+    .ambience-orb-2 { animation-name: orbFloat2; }
+    @keyframes orbFloat2 {
+      0%   { opacity: 0; transform: scale(1) translate(0, 0); }
+      30%  { opacity: 0.8; }
+      60%  { opacity: 0.4; transform: scale(1.1) translate(-8px, 10px); }
+      80%  { opacity: 0.9; }
+      100% { opacity: 0; transform: scale(1) translate(0, 0); }
     }
 
     .wrapper {
@@ -58,7 +109,36 @@
       padding: 24px;
     }
 
+    .card-outer {
+      position: relative;
+      border-radius: 24px;
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: conic-gradient(
+        from var(--glow-angle, 0deg) at var(--glow-x, 50%) var(--glow-y, 50%),
+        transparent 60deg,
+        rgba(255,255,255,0.18) 120deg,
+        transparent 180deg
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1.5px;
+    }
+
     .card {
+      position: relative;
+      z-index: 1;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -72,7 +152,7 @@
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(32px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .left-panel {
@@ -95,15 +175,12 @@
       background: linear-gradient(135deg, #555, #222);
     }
 
-    .avatar-ring .avatar-placeholder {
+    .avatar-ring img {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background: #2a2a2a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 56px;
+      object-fit: cover;
+      display: block;
     }
 
     .status-badge {
@@ -127,10 +204,7 @@
       background: #aaa;
     }
 
-    .interests-section {
-      width: 100%;
-      margin-top: 8px;
-    }
+    .interests-section { width: 100%; margin-top: 8px; }
 
     .interests-label {
       font-size: 9px;
@@ -165,8 +239,12 @@
     }
 
     .name-block {
-      margin-bottom: 8px;
+      margin-bottom: 16px;
       animation: fadeUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .name-accent-bar {
@@ -174,9 +252,8 @@
       height: 32px;
       background: #888;
       display: inline-block;
-      vertical-align: middle;
-      margin-right: 14px;
       border-radius: 2px;
+      flex-shrink: 0;
     }
 
     .name {
@@ -184,13 +261,9 @@
       font-size: 26px;
       font-weight: 900;
       color: var(--text);
-      display: inline;
-      vertical-align: middle;
     }
 
     .year-tag {
-      display: inline-block;
-      margin-left: 12px;
       padding: 3px 10px;
       border-radius: 100px;
       font-size: 10px;
@@ -200,19 +273,17 @@
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
       color: var(--muted);
-      vertical-align: middle;
     }
 
     .divider {
       height: 1px;
       background: var(--border);
-      margin: 24px 0;
+      margin-bottom: 24px;
     }
 
     .info-grid {
       display: flex;
       flex-direction: column;
-      gap: 0;
     }
 
     .info-item {
@@ -223,7 +294,7 @@
       animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    .info-item:first-child { border-top: 1px solid var(--border); }
+    .info-item:first-child { border-top: none; }
 
     .info-item:nth-child(1) { animation-delay: 0.2s; }
     .info-item:nth-child(2) { animation-delay: 0.27s; }
@@ -242,7 +313,6 @@
 
     .info-value {
       font-size: 14px;
-      font-weight: 400;
       color: var(--text);
       line-height: 1.5;
     }
@@ -267,10 +337,7 @@
       text-transform: uppercase;
     }
 
-    .dot-row {
-      display: flex;
-      gap: 5px;
-    }
+    .dot-row { display: flex; gap: 5px; }
 
     .dot {
       width: 5px;
@@ -292,79 +359,105 @@
   </style>
 </head>
 <body>
+  <div class="ambience">
+    <div class="ambience-orb ambience-orb-1"></div>
+    <div class="ambience-orb ambience-orb-2"></div>
+    <div class="ambience-orb ambience-orb-3"></div>
+  </div>
   <div class="grain"></div>
+
   <div class="wrapper">
-    <div class="card">
-      <div class="left-panel">
-        <div class="avatar-ring">
-          <div class="avatar-placeholder">
-  <img src="HCCPFP.jpg" alt="pogi" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-</div>
-        </div>
-
-        <div class="status-badge">
-          <div class="status-dot"></div>
-          BSIT - 1
-        </div>
-
-        <div class="interests-section">
-          <div class="interests-label">Interests</div>
-          <div class="tags">
-            <span class="tag">🎬 Films</span>
-            <span class="tag">🎵 Music</span>
-            <span class="tag">🎮 Games</span>
-            <span class="tag">💻 Tech</span>
-            <span class="tag">+ more</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="right-panel">
-        <div class="name-block">
-          <span class="name-accent-bar"></span>
-          <span class="name">Hilnnee Cabaylo Casamayor</span>
-          <span class="year-tag">1st Year</span>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Address</span>
-            <span class="info-value">Poblacion, Imelda, Zamboanga Sibugay</span>
+    <div class="card-outer" id="cardOuter">
+      <div class="card-glow" id="cardGlow"></div>
+      <div class="card">
+        <div class="left-panel">
+          <div class="avatar-ring">
+            <img src="HCCPFP.jpg" alt="Hilnnee Cabaylo Casamayor" />
           </div>
 
-          <div class="info-item">
-            <span class="info-label">Occupation</span>
-            <span class="info-value"><strong>Student</strong> · MSU Buug</span>
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            BSIT - 1
           </div>
 
-          <div class="info-item">
-            <span class="info-label">School Address</span>
-            <span class="info-value">Datu Panas, Buug, Zamboanga Sibugay</span>
+          <div class="interests-section">
+            <div class="interests-label">Interests</div>
+            <div class="tags">
+              <span class="tag">🎬 Films</span>
+              <span class="tag">🎵 Music</span>
+              <span class="tag">🎮 Games</span>
+              <span class="tag">💻 Tech</span>
+              <span class="tag">+ more</span>
+            </div>
           </div>
-
-          <div class="info-item">
-            <span class="info-label">Course/Program</span>
-            <span class="info-value"><strong>Bachelor of Science in Information Technology</strong></span>
-          </div>
-
-          <div class="info-item">
-  <span class="info-label">Year Level</span>
-  <span class="info-value">1st Year</span>
-</div>
         </div>
 
-        <div class="footer">
-          <span class="footer-text">MSU Buug · BSIT</span>
-          <div class="dot-row">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+        <div class="right-panel">
+          <div class="name-block">
+            <span class="name-accent-bar"></span>
+            <span class="name">Hilnnee Cabaylo Casamayor</span>
+            <span class="year-tag">1st Year</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Address</span>
+              <span class="info-value">Poblacion, Imelda, Zamboanga Sibugay</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Occupation</span>
+              <span class="info-value"><strong>Student</strong> · MSU Buug</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">School Address</span>
+              <span class="info-value">Datu Panas, Buug, Zamboanga Sibugay</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Course / Program</span>
+              <span class="info-value"><strong>Bachelor of Science in Information Technology</strong></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Year Level</span>
+              <span class="info-value">1st Year</span>
+            </div>
+          </div>
+
+          <div class="footer">
+            <span class="footer-text">MSU Buug · BSIT</span>
+            <div class="dot-row">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    const outer = document.getElementById('cardOuter');
+    const glow = document.getElementById('cardGlow');
+
+    outer.addEventListener('mousemove', (e) => {
+      const rect = outer.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = (x / rect.width) * 100;
+      const yPct = (y / rect.height) * 100;
+      const angle = Math.atan2(y - rect.height / 2, x - rect.width / 2) * (180 / Math.PI);
+
+      glow.style.setProperty('--glow-x', `${xPct}%`);
+      glow.style.setProperty('--glow-y', `${yPct}%`);
+      glow.style.setProperty('--glow-angle', `${angle}deg`);
+      glow.style.opacity = '1';
+    });
+
+    outer.addEventListener('mouseleave', () => {
+      glow.style.opacity = '0';
+    });
+  </script>
 </body>
 </html>
