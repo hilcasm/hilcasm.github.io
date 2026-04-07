@@ -387,27 +387,67 @@
     resize();
     window.addEventListener('resize', resize);
 
+    const colors = [
+      { r: 180, g: 140, b: 255 },
+      { r: 255, g: 180, b: 100 },
+      { r: 255, g: 255, b: 255 },
+    ];
+
     const points = [];
     const count = 6;
 
     for (let i = 0; i < count; i++) {
+      const c = colors[i % colors.length];
       points.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: 180 + Math.random() * 140,
-        brightness: 0.03 + Math.random() * 0.04
+        vx: (Math.random() - 0.5) * 2.8,
+        vy: (Math.random() - 0.5) * 2.8,
+        r: 260 + Math.random() * 180,
+        brightness: 0.10 + Math.random() * 0.08,
+        cr: c.r, cg: c.g, cb: c.b
       });
     }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let cursorX = mouseX;
+    let cursorY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    const trail = [];
+    const trailMax = 18;
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      cursorX += (mouseX - cursorX) * 0.07;
+      cursorY += (mouseY - cursorY) * 0.07;
+
+      trail.unshift({ x: cursorX, y: cursorY });
+      if (trail.length > trailMax) trail.pop();
+
+      for (let i = 0; i < trail.length; i++) {
+        const t = trail[i];
+        const alpha = (1 - i / trailMax) * 0.10;
+        const radius = 90 - i * 3.5;
+        const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, radius);
+        grad.addColorStop(0, `rgba(200,170,255,${alpha})`);
+        grad.addColorStop(1, 'rgba(200,170,255,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       for (const p of points) {
         const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        grad.addColorStop(0, `rgba(255,255,255,${p.brightness})`);
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        grad.addColorStop(0, `rgba(${p.cr},${p.cg},${p.cb},${p.brightness})`);
+        grad.addColorStop(1, `rgba(${p.cr},${p.cg},${p.cb},0)`);
         ctx.fillStyle = grad;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
