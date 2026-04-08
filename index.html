@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Casamayor Personal Information</title>
+  <title>Hilnnee Cabaylo Casamayor</title>
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -207,6 +207,35 @@
       grid-template-columns: 1fr 1fr;
       gap: 0 14px;
     }
+
+    @media (max-width: 680px) {
+      body { align-items: flex-start; overflow-y: auto; padding: 20px 12px 40px; }
+
+      .id-card {
+        width: 100%;
+        padding: 14px 14px 12px;
+        border-radius: 10px;
+        animation: floatIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+      }
+
+      .card-body { flex-direction: column; align-items: center; gap: 14px; }
+
+      .photo-col { width: 100%; flex-direction: row; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+
+      .photo-frame { width: 90px; height: 108px; flex-shrink: 0; }
+
+      .photo-right { display: flex; flex-direction: column; gap: 6px; justify-content: flex-start; padding-top: 2px; }
+
+      .photo-badge { width: auto; }
+
+      .info-col { width: 100%; }
+
+      .info-value.lg { font-size: 17px; }
+
+      .info-two-col { grid-template-columns: 1fr; }
+
+      .header-title { font-size: 9px; letter-spacing: 2px; }
+    }
   </style>
 </head>
 <body>
@@ -219,23 +248,25 @@
 
     <div class="star-row" id="topStars"></div>
 
-    <div class="header-title">PERSONAL INFORMATION</div>
-    <div class="header-sub">No.728 HCC · 2026 · BSIT</div>
+    <div class="header-title">Permanent License of Travel</div>
+    <div class="header-sub">No. HCC · 2025 · BSIT</div>
 
     <div class="card-body">
       <div class="photo-col">
         <div class="photo-frame">
           <img src="HCCPFP.jpg" alt="Hilnnee"/>
         </div>
-        <div class="photo-caption">ID PIC</div>
-        <div class="photo-badge">BSIT · I</div>
+        <div class="photo-right">
+          <div class="photo-caption">Photograph of Authorized Traveler</div>
+          <div class="photo-badge">BSIT · I</div>
+        </div>
       </div>
 
       <div class="info-col">
-        <div class="id-number">NO. 20072806</div>
+        <div class="id-number">NO. HCC2025BSIT</div>
 
         <div class="info-row">
-          <div class="info-label">Name</div>
+          <div class="info-label">Personal Information</div>
           <div class="info-value lg">Hilnnee Cabaylo Casamayor</div>
         </div>
 
@@ -261,8 +292,8 @@
             <div class="info-value">1st Year</div>
           </div>
           <div class="info-row">
-            <div class="info-label">Interests</div>
-            <div class="info-value">Films, Music, Games, Tech, etc.</div>
+            <div class="info-label">Date of Issue</div>
+            <div class="info-value">A.Y. 2025 / 2026</div>
           </div>
         </div>
       </div>
@@ -279,6 +310,11 @@
   const stars = [];
   let mouseX = -9999, mouseY = -9999;
   window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+  window.addEventListener('touchmove', e => {
+    mouseX = e.touches[0].clientX;
+    mouseY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', () => { mouseX = -9999; mouseY = -9999; });
 
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
@@ -365,6 +401,13 @@
     card.style.transform = `rotate(-0.5deg) rotateY(${x*6}deg) rotateX(${-y*4}deg)`;
   });
   card.addEventListener('mouseleave', () => { card.style.transform = 'rotate(-0.5deg)'; });
+  card.addEventListener('touchmove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.touches[0].clientX - rect.left) / rect.width - 0.5;
+    const y = (e.touches[0].clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `rotate(-0.5deg) rotateY(${x*5}deg) rotateX(${-y*3}deg)`;
+  }, { passive: true });
+  card.addEventListener('touchend', () => { card.style.transform = 'rotate(-0.5deg)'; });
 </script>
 </body>
 </html>
